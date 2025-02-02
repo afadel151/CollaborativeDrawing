@@ -6,7 +6,6 @@ const signOut = async () => {
 
 
         console.log(error)
-        navigateTo('/login')
     }
 }
 </script>
