@@ -4,7 +4,7 @@ const signInWithOAuth = async () => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: '/confirm',
+      redirectTo: '/draw',
     },
   })
   if (error) console.log(error)
