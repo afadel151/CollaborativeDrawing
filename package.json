@@ -12,7 +12,10 @@
   "dependencies": {
     "@nuxtjs/supabase": "^1.4.6",
     "@tailwindcss/vite": "^4.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "fabric": "^6.5.4",
+    "jquery": "^3.7.1",
     "nuxt": "^3.15.4",
     "nuxt-socket-io": "^3.0.13",
     "socket.io": "^4.8.1",
