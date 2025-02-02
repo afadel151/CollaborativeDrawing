@@ -35,33 +35,28 @@ const historyIndex = ref(-1);
 const imageFormat = ref('png');
 const imageQuality = ref(1.0);
 import { Canvas } from 'fabric';
-onMounted( () => { // Prevent execution on the server
+onMounted( () => { 
 
- 
-        // Dynamically import fabric.js
-
-        // Initialize the Fabric.js canvas
         canvas.value = new Canvas(canvasRef.value, {
             width: 1000,
             height: 1000,
-            isDrawingMode: false,
+            isDrawingMode: true,
         });
-
-        // Load initial drawing history
-        $io.on('init', (historyData) => {
-            historyData.forEach((data) => addObject(data));
-        });
+        console.log(canvas.value);
+        
+        // $io.on('init', (historyData) => {
+        //     historyData.forEach((data) => addObject(data));
+        // });
 
         // Handle real-time drawing updates
-        $io.on('drawing', (data) => {
-            if (data.isTemp) {
-                updateTempDrawing(data);
-            } else {
-                addObject(data);
-            }
-        });
+        // $io.on('drawing', (data) => {
+        //     if (data.isTemp) {
+        //         updateTempDrawing(data);
+        //     } else {
+        //         addObject(data);
+        //     }
+        // });
 
-        // Set up event handlers
         setupEventHandlers();
   
 });
@@ -101,7 +96,7 @@ const draw = (e) => {
         isTemp: true,
     };
 
-    $io.emit('drawing', data);
+    // $io.emit('drawing', data);
 };
 
 // Stop drawing
@@ -118,7 +113,7 @@ const stopDrawing = (e) => {
         isTemp: false,
     };
 
-    $io.emit('drawing', data);
+    // $io.emit('drawing', data);
 };
 
 
