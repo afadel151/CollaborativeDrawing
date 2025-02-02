@@ -10,7 +10,7 @@ watch(user, () => {
       // Clear cookie
       useCookie(`${cookieName}-redirect-path`).value = null
       // Redirect to path
-      return navigateTo(redirectPath || '/secure'); 
+      return navigateTo('/secure'); 
   }
 }, { immediate: true })
 </script>
