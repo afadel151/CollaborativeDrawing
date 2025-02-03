@@ -15,12 +15,19 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
-
-  socket.on('draw', (data) => {
-    // Broadcast drawing data to all other clients
-    socket.broadcast.emit('draw', data);
+  socket.on('join-room', (roomCode) => {
+    socket.join(roomCode); // Join the room
+    console.log(`User ${socket.id} joined room ${roomCode}`);
   });
-
+  socket.on('draw', (data) => {
+    const { roomCode, ...drawData } = data;
+    // Broadcast drawing data to all clients in the same room
+    socket.to(roomCode).emit('draw', drawData);
+  });
+  socket.on('leave-room', (roomCode) => {
+    socket.leave(roomCode); // Leave the room
+    console.log(`User ${socket.id} left room ${roomCode}`);
+  });
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);
   });
