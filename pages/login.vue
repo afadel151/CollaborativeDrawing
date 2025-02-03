@@ -1,14 +1,14 @@
 <script setup>
 const supabase = useSupabaseClient()
 const signInWithOAuth = async () => {
-  const { error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: '/draw',
+      redirectTo: 'https://collaborative-drawing-git-main-afadel151s-projects.vercel.app/confirm', // Ensure this matches your Supabase settings
     },
   })
-  if (error) console.log(error)
 }
+
 </script>
 
 <template>

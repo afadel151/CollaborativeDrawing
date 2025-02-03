@@ -1,19 +1,25 @@
 <script setup>
+import { useSupabaseClient, useSupabaseUser } from '#imports'
+
+const supabase = useSupabaseClient()
 const user = useSupabaseUser()
- 
-// Get redirect path from cookies
-const cookieName = useRuntimeConfig().public.supabase.cookieName
-const redirectPath = useCookie(`${cookieName}-redirect-path`).value
- 
-watch(user, () => {
-  if (user.value) {
-      // Clear cookie
-      useCookie(`${cookieName}-redirect-path`).value = null
-      // Redirect to path
-      return navigateTo('/secure'); 
+
+const checkAuth = async () => {
+  const { data, error } = await supabase.auth.getSession()
+  console.log('Session:', data)
+
+  if (data.session) {
+    console.log('User logged in:', data.session.user)
+    navigateTo('/secure')
+  } else {
+    console.log('No session found')
+    navigateTo('/login')
   }
-}, { immediate: true })
+}
+
+onMounted(checkAuth)
 </script>
+
 <template>
   <div>Waiting for login...</div>
 </template>

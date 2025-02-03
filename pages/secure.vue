@@ -1,14 +1,24 @@
 <script setup>
 const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+
+const checkSession = async () => {
+  const { data } = await supabase.auth.getSession()
+  console.log('Secure page session:', data)
+}
+
+onMounted(checkSession)
+
 const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) {
-
-
-        console.log(error)
-    }
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    console.log(error)
+  } else {
+    navigateTo('/login')
+  }
 }
 </script>
+
 
 <template>
     <div class="centre">
