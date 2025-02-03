@@ -1,7 +1,5 @@
 <script setup>
-definePageMeta({
-  middleware: 'auth'
-})
+
 import { PenLine, Users } from "lucide-vue-next";
 import { useSupabaseClient, useSupabaseUser } from "#imports";
 const supabase = useSupabaseClient();
