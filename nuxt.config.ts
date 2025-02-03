@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-import tailwindcss from "@tailwindcss/vite";
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   runtimeConfig: {
@@ -10,21 +10,34 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
-  css: ['~/assets/css/main.css'],
-  modules: ['@nuxtjs/supabase', 'nuxt-socket-io'],
+  css: ['~/assets/css/tailwind.css'],
+  modules: ['@nuxtjs/supabase','@nuxtjs/tailwindcss','@nuxtjs/color-mode', 'nuxt-socket-io','shadcn-nuxt'],
 
-  vite: {
-    plugins: [
-      tailwindcss(),
-    ],
-  },
+  
   io: {
     // module options
     sockets: [{
       name: 'main',
-      url: 'http://localhost:3000'
+      url: 'https://collaborativedrawing.onrender.com'
     }]
   },
-  plugins: ['~/plugins/supabase.client.ts'],
   
+  plugins: ['~/plugins/supabase.client.ts'],
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
+    prefix: '',
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: './components/ui'
+  },
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
 })

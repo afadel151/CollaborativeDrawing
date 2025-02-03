@@ -10,7 +10,7 @@ const checkAuth = async () => {
 
   if (data.session) {
     console.log('User logged in:', data.session.user)
-    navigateTo('/secure')
+    navigateTo('/dialog')
   } else {
     console.log('No session found')
     navigateTo('/login')

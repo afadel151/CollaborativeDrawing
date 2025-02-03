@@ -10,20 +10,35 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/supabase": "^1.4.6",
-    "@tailwindcss/vite": "^4.0.3",
+    "@vueuse/core": "^12.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "fabric": "^6.5.4",
     "jquery": "^3.7.1",
     "konva": "^9.3.18",
+    "lucide-vue-next": "^0.474.0",
     "nuxt": "^3.15.4",
     "nuxt-socket-io": "^3.0.13",
+    "radix-vue": "^1.9.13",
+    "shadcn-nuxt": "^0.11.3",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
-    "tailwindcss": "^4.0.3",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
     "vue": "latest",
     "vue-konva": "^3.2.0",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.13.1",
+    "@tailwindcss/postcss7-compat": "^2.2.17",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
   }
 }
