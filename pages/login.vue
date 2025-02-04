@@ -1,28 +1,30 @@
 <script setup>
 import { useSupabaseClient, useSupabaseUser } from "#imports";
-const supabase = useSupabaseClient()
+const supabase = useSupabaseClient();
 const user = useSupabaseUser();
-onMounted(()=>{
-  if (user) {
-    console.log('User are  logged in');
-    navigateTo('/confirm')
-  }else{
-    console.log('User not logged in');
-    
-  }
-})
+const router = useRouter();
 
+onMounted(() => {
+  if (user.value) {
+    console.log('User is logged in');
+    if (router.currentRoute.value.path !== '/confirm') {
+      router.push('/confirm');
+    }
+  } else {
+    console.log('User is not logged in');
+  }
+});
 
 const signInWithOAuth = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: '/confirm', // Ensure this matches your Supabase settings
+      redirectTo: '/confirm',
     },
-  })
-}
-
+  });
+};
 </script>
+
 
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

@@ -1,16 +1,17 @@
 <script setup>
-// const user = useSupabaseUser()
-// onMounted(()=>{
-//   if (user) {
-//     return navigateTo('/dialog')
-//   }
-// })
-// watch(user, () => {
-//   if (user.value) {
-//       return navigateTo('/dialog')
-//   }
-// }, { immediate: true })
-navigateTo('/dialog')
+import { useSupabaseUser } from "#imports";
+import { useRouter } from "vue-router";
+const user = useSupabaseUser();
+const router = useRouter();
+
+onMounted(() => {
+  if (user.value) {
+    console.log('User is logged in, proceeding to dialog');
+    router.push('/dialog');
+  } else {
+    console.log('User not logged in');
+  }
+});
 </script>
 
 <template>
