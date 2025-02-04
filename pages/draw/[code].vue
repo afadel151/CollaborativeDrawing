@@ -34,6 +34,9 @@ function activateAddinLine() {
         canvas.on('mouse:up', stopDrawingLine);
     }else{
         canvas.isDrawingMode = true;
+        canvas.off('mouse:down', startAddingLine);
+        canvas.off('mouse:move', startDrawingLine);
+        canvas.off('mouse:up', stopDrawingLine);
     }
 }
 const DrawingLine = ref(false)
