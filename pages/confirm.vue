@@ -1,10 +1,12 @@
 <script setup>
 const user = useSupabaseUser()
-const route = useRoute();
-console.log(route.params.code); 
+onMounted(()=>{
+  if (user) {
+    return navigateTo('/dialog')
+  }
+})
 watch(user, () => {
   if (user.value) {
-
       return navigateTo('/dialog')
   }
 }, { immediate: true })
