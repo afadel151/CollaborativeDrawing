@@ -51,6 +51,18 @@ function startAddingLine(o) {
     canvas.add(line);
     canvas.requestRenderAll();
 }
+function startDrawingLine(o) {
+    if (mouseDown === true) {
+        let pointer = canvas.getPointer(o.e);
+        line.set({
+            x2: pointer.x,
+            y2: pointer.y
+        });
+        canvas.requestRenderAll();
+    }
+
+
+}
 function stopDrawingLine() {
     mouseDown = false;
 
