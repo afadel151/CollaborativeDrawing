@@ -10,6 +10,7 @@
 //       return navigateTo('/dialog')
 //   }
 // }, { immediate: true })
+navigateTo('/dialog')
 </script>
 
 <template>
