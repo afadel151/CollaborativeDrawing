@@ -27,7 +27,7 @@ let mouseDown = false;
 const LineDrawing = ref(false);
 function activateAddinLine() {
     LineDrawing.value = !LineDrawing.value;
-    if (LineDrawing.value) {
+    if (LineDrawing.value == true) {
         canvas.isDrawingMode = false;
         canvas.on('mouse:down', startAddingLine);
         canvas.on('mouse:move', startDrawingLine);
