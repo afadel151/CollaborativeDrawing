@@ -7,7 +7,7 @@ const router = useRouter()
 const user = useSupabaseUser();
 if (!user) {
     console.log("No session found");
-    navigateTo("/login");
+    navigateTo("/");
   }
 import { nanoid } from 'nanoid'
 // const router = useRouter();
