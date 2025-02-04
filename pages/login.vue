@@ -5,7 +5,7 @@ const user = useSupabaseUser();
 const router = useRouter();
 
 onMounted(() => {
-  if (user) {
+  if (user.value) {
     console.log('User is logged in');
     if (router.currentRoute.value.path !== '/confirm') {
       router.push('/confirm');
