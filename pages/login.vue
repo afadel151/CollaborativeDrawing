@@ -4,6 +4,7 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser();
 onMounted(()=>{
   if (user) {
+    console.log('User  logged in');
     navigateTo('/dialog')
   }else{
     console.log('User not logged in');
