@@ -32,6 +32,8 @@ function activateAddinLine() {
         canvas.on('mouse:down', startAddingLine);
         canvas.on('mouse:move', startDrawingLine);
         canvas.on('mouse:up', stopDrawingLine);
+    }else{
+        canvas.isDrawingMode = true;
     }
 }
 const DrawingLine = ref(false)
@@ -64,6 +66,7 @@ function stopDrawingLine() {
         type: 'add',
         object: line.toObject(['id']), // Include 'id' in the serialized object
     });
+    
 }
 onMounted(() => {
     const onlineUsers = supabase.channel('users_online', {
