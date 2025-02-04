@@ -5,7 +5,7 @@ const user = useSupabaseUser();
 const router = useRouter();
 
 onMounted(() => {
-  if (user.value) {
+  if (user) {
     console.log('User is logged in, proceeding to dialog');
     router.push('/dialog');
   } else {
