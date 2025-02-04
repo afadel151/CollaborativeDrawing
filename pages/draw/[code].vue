@@ -72,15 +72,7 @@ function stopDrawingLine() {
     }
 }
 
-function stopDrawingLine() {
-    mouseDown = false;
-    socket.emit('draw', {
-        roomCode,
-        type: 'add',
-        object: line.toObject(['id']), // Include 'id' in the serialized object
-    });
 
-}
 onMounted(() => {
     const onlineUsers = supabase.channel('users_online', {
         config: {
