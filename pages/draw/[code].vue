@@ -32,7 +32,7 @@
             },
         })
         const userStatus = {
-            user_id: user.id,
+            user_id: user.value.id,
             online_at: new Date().toISOString(),
         }
         onlineUsers.subscribe(async (status) => {
