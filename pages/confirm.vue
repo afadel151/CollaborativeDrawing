@@ -7,7 +7,7 @@ const router = useRouter();
 onMounted(() => {
   if (user) {
     console.log('User is logged in, proceeding to dialog');
-    router.push('/dialog');
+    router.push('/');
   } else {
     console.log('User not logged in');
   }
