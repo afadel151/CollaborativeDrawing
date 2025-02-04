@@ -11,7 +11,7 @@ const signInWithOAuth = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: 'http://localhost:3000/confirm', // Ensure this matches your Supabase settings
+      redirectTo: 'https://collaborative-drawing-git-main-afadel151s-projects.vercel.app/confirm', // Ensure this matches your Supabase settings
     },
   })
 }
