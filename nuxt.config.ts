@@ -26,7 +26,6 @@ export default defineNuxtConfig({
     }]
   },
   
-  plugins: ['~/plugins/supabase.client.ts'],
   shadcn: {
     /**
      * Prefix for all the imported component
