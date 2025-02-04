@@ -22,6 +22,7 @@ io.on('connection', (socket) => {
   socket.on('draw', (data) => {
     const { roomCode, ...drawData } = data;
     // Broadcast drawing data to all clients in the same room
+    console.log('draw ');
     socket.to(roomCode).emit('draw', drawData);
   });
   socket.on('leave-room', (roomCode) => {
