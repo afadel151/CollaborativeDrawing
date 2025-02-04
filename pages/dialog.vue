@@ -5,7 +5,7 @@ const router = useRouter()
 const user = useSupabaseUser();
 onMounted(() => {
   if (user) {
-    console.log('User logged');
+    console.log('User is logged');
     
     // navigateTo("/login");
   }
