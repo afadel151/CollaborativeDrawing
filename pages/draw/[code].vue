@@ -228,10 +228,24 @@
             });
         }
         socket.on('draw', (data) => {
-            if (data.roomCode === roomCode) {
+            console.log('draw',data);
+            console.log(data.roomCode);
+            
+            
+            
+                console.log(data.type);
+                if (data.type === 'path') {
+                    console.log('draw3');
+                    canvas.add(new fabric.Path(data.path, data.options));
+                } else if (data.type === 'clear') {
+                    console.log('draw4');
+                    canvas.clear();
+                }
                 if (data.type === 'add') {
                     const existingObject = canvas.getObjects().find(o => o.id === data.object.id);
+                    console.log('draw1');
                     if (!existingObject) {
+                        console.log('draw2');
                         fabric.util.enlivenObjects([data.object], function (objects) {
                             objects.forEach(obj => {
                                 obj.set({ id: data.object.id });
@@ -241,12 +255,9 @@
                         });
                     }
                 }
-                if (data.type === 'path') {
-                    canvas.add(new fabric.Path(data.path, data.options));
-                } else if (data.type === 'clear') {
-                    canvas.clear();
-                }
+                
                 if (data.type === 'move' || data.type === 'rotate' || data.type === 'scale') {
+                    console.log('draw5');
                     const { object } = data;
                     const fabricObject = canvas.getObjects().find(o => o.id === object.id); // Find object by ID
                     if (fabricObject) {
@@ -256,7 +267,7 @@
 
                 }
 
-            }
+            
         });
         canvas.on('path:created', (event) => {
             const path = event.path;
