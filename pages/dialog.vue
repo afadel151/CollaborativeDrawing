@@ -1,4 +1,4 @@
-<!-- <script setup>
+ <script setup>
 console.log('User is logged');
 import { PenLine, Users } from "lucide-vue-next";
 const supabase = useSupabaseClient();
@@ -108,10 +108,5 @@ const joinDrawing = async () => {
       </div>
     </div>
   </div>
-</template> -->
+</template> 
 
-<template>
-  <div>
-    Dialog
-  </div>
-</template>
