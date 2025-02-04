@@ -45,7 +45,8 @@ function startAddingLine(o) {
     let pointer = canvas.getPointer(o.e);
     line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
         stroke: LineColor.value,
-        strokeWidth: 3
+        strokeWidth: 3,
+        id: `triangle-${Date.now()}`
     });
     canvas.add(line);
     canvas.requestRenderAll();
