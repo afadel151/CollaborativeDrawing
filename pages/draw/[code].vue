@@ -32,7 +32,7 @@ function activateAddinLine() {
         canvas.on('mouse:down', startAddingLine);
         canvas.on('mouse:move', startDrawingLine);
         canvas.on('mouse:up', stopDrawingLine);
-    }else{
+    } else {
         canvas.isDrawingMode = true;
         canvas.off('mouse:down', startAddingLine);
         canvas.off('mouse:move', startDrawingLine);
@@ -51,18 +51,27 @@ function startAddingLine(o) {
     canvas.add(line);
     canvas.requestRenderAll();
 }
-function startDrawingLine(o) {
-    if (mouseDown === true) {
-        let pointer = canvas.getPointer(o.e);
-        line.set({
-            x2: pointer.x,
-            y2: pointer.y
+function stopDrawingLine() {
+    mouseDown = false;
+
+    if (line) {
+        socket.emit('draw', {
+            roomCode,
+            type: 'add',
+            object: {
+                type: 'line',
+                id: line.id,
+                x1: line.x1,
+                y1: line.y1,
+                x2: line.x2,
+                y2: line.y2,
+                stroke: line.stroke,
+                strokeWidth: line.strokeWidth
+            }
         });
-        canvas.requestRenderAll();
     }
-
-
 }
+
 function stopDrawingLine() {
     mouseDown = false;
     socket.emit('draw', {
@@ -70,7 +79,7 @@ function stopDrawingLine() {
         type: 'add',
         object: line.toObject(['id']), // Include 'id' in the serialized object
     });
-    
+
 }
 onMounted(() => {
     const onlineUsers = supabase.channel('users_online', {
@@ -314,47 +323,44 @@ onMounted(() => {
 
     socket.on('draw', (data) => {
         console.log('draw', data);
-        console.log(data.roomCode);
 
-
-
-        console.log(data.type);
         if (data.type === 'path') {
-            console.log('draw3');
             canvas.add(new fabric.Path(data.path, data.options));
             canvas.requestRenderAll();
         } else if (data.type === 'clear') {
-            console.log('draw4');
             canvas.clear();
-        }
-        if (data.type === 'add') {
+        } else if (data.type === 'add') {
+            console.log('Adding object:', data.object);
+
+            // Check if object already exists
             const existingObject = canvas.getObjects().find(o => o.id === data.object.id);
-            console.log('draw1');
             if (!existingObject) {
-                console.log('draw2');
-                fabric.util.enlivenObjects([data.object], function (objects) {
-                    objects.forEach(obj => {
-                        obj.set({ id: data.object.id });
-                        canvas.add(obj);
+                if (data.object.type === 'line') {
+                    // Handle lines separately
+                    const line = new fabric.Line([
+                        data.object.x1, data.object.y1,
+                        data.object.x2, data.object.y2
+                    ], {
+                        stroke: data.object.stroke,
+                        strokeWidth: data.object.strokeWidth,
+                        id: data.object.id
                     });
+                    canvas.add(line);
                     canvas.requestRenderAll();
-                });
+                } else {
+                    // Handle other objects
+                    fabric.util.enlivenObjects([data.object], function (objects) {
+                        objects.forEach(obj => {
+                            obj.set({ id: data.object.id });
+                            canvas.add(obj);
+                        });
+                        canvas.requestRenderAll();
+                    });
+                }
             }
         }
-
-        if (data.type === 'move' || data.type === 'rotate' || data.type === 'scale') {
-            console.log('draw5');
-            const { object } = data;
-            const fabricObject = canvas.getObjects().find(o => o.id === object.id); // Find object by ID
-            if (fabricObject) {
-                fabricObject.set(object); // Update the object with the new properties
-                canvas.requestRenderAll();
-            }
-
-        }
-
-
     });
+
     canvas.on('path:created', (event) => {
         const path = event.path;
         console.log('path created');
