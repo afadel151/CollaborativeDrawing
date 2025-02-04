@@ -58,7 +58,12 @@ function startDrawingLine(o) {
 
 }
 function stopDrawingLine() {
-    mouseDown = false
+    mouseDown = false;
+    socket.emit('draw', {
+        roomCode,
+        type: 'add',
+        object: line.toObject(['id']), // Include 'id' in the serialized object
+    });
 }
 onMounted(() => {
     const onlineUsers = supabase.channel('users_online', {
@@ -143,7 +148,7 @@ onMounted(() => {
             roomCode,
         });
     };
-    socket.on('clear',(data)=>{
+    socket.on('clear', (data) => {
         canvas.clear();
     })
     drawingModeEl.onclick = function () {
@@ -299,7 +304,7 @@ onMounted(() => {
             color: drawingShadowColorEl.value,
         });
     }
-    
+
     socket.on('draw', (data) => {
         console.log('draw', data);
         console.log(data.roomCode);
