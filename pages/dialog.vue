@@ -22,7 +22,7 @@ const createNewDrawing = async () => {
       .from('drawings')
       .insert({
         code: drawingCode,
-        user_id: user.value.id,
+        user_id: user.id,
       });
     if (error) {
       console.error('Insert error:', error.message);
@@ -66,6 +66,7 @@ const joinDrawing = async () => {
   <div
     class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4"
   >
+  {{ user.id }}
     <div
       class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 max-w-md w-full space-y-8"
     >
