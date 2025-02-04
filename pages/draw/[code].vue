@@ -450,12 +450,12 @@ const addShape = (type) => {
 
     if (shape) {
         canvas.add(shape);
-        console.log('emitting object');
+        console.log('emitting object',shape);
         
         socket.emit('draw', {
             roomCode,
             type: 'add',
-            options: shape.toObject(['id']), // Include 'id' in the serialized object
+            object: shape.toObject(['id']), // Include 'id' in the serialized object
         });
     }
 };
