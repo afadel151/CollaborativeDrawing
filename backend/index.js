@@ -19,6 +19,12 @@ io.on('connection', (socket) => {
     socket.join(roomCode); // Join the room
     console.log(`User ${socket.id} joined room ${roomCode}`);
   });
+  socket.on('clear',(data)=>{
+    const {roomCode, ...drawData} = data;
+    console.log('clear');
+    socket.to(roomCode).emit('clear',drawData);
+    
+  })
   socket.on('draw', (data) => {
     const { roomCode, ...drawData } = data;
     // Broadcast drawing data to all clients in the same room
