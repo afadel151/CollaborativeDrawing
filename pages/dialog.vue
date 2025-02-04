@@ -1,4 +1,5 @@
 <script setup>
+console.log('User is logged');
 import { PenLine, Users } from "lucide-vue-next";
 const supabase = useSupabaseClient();
 const router = useRouter()
