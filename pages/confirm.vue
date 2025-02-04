@@ -1,6 +1,7 @@
 <script setup>
 const user = useSupabaseUser()
-
+const route = useRoute();
+console.log(route.params.code); 
 watch(user, () => {
   if (user.value) {
 
