@@ -8,10 +8,10 @@
         Join our creative community and collaborate in real-time with artists worldwide.
         Express yourself through digital art with our powerful drawing tools.
       </p>
-      <NuxtLink to="/login"
+      <!-- <NuxtLink to="/login"
         class="inline-block bg-indigo-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition-colors">
         Start Drawing
-      </NuxtLink>
+      </NuxtLink> -->
     </div>
 
     <div class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -33,11 +33,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-onMounted(() => {
-  if (process.client) {
-    window.location.reload();
-  }
-});
-</script>
