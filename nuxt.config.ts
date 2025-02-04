@@ -7,6 +7,10 @@ export default defineNuxtConfig({
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseKey: process.env.SUPABASE_KEY,
+      supabase: {
+        persistSession: true,
+        autoRefreshToken: true,
+      },
     },
   },
   devtools: { enabled: true },

@@ -1,5 +1,12 @@
 <script setup>
+import { useSupabaseClient, useSupabaseUser } from "#imports";
 const supabase = useSupabaseClient()
+const user = useSupabaseUser();
+
+onMounted(async () => {
+  const { data, error } = await supabase.auth.getUser();
+  console.log("Supabase User:", data, "Error:", error);
+});
 const signInWithOAuth = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',

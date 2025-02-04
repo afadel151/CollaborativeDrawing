@@ -8,7 +8,7 @@ const user = useSupabaseUser();
 watchEffect(() => {
   if (!user.value) {
     console.log("No session found, redirecting to /login");
-    navigateTo("/login");
+    // navigateTo("/login");
   }
 });
 import { nanoid } from 'nanoid'
