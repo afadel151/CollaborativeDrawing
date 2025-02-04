@@ -3,8 +3,8 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
 const checkSession = async () => {
-  const { data } = await supabase.auth.getSession()
-  console.log('Secure page session:', data)
+  const { data, error } = await supabase.auth.getSession()
+  console.log('Session Data:', data, 'Error:', error)
 }
 
 onMounted(checkSession)
