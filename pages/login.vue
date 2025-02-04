@@ -5,7 +5,7 @@ const user = useSupabaseUser();
 onMounted(()=>{
   if (user) {
     console.log('User  logged in');
-    navigateTo('/dialog')
+    navigateTo('/confirm')
   }else{
     console.log('User not logged in');
     
@@ -17,7 +17,7 @@ const signInWithOAuth = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: 'https://collaborative-drawing-git-master-afadel151s-projects.vercel.app/hello', // Ensure this matches your Supabase settings
+      redirectTo: '/confirm', // Ensure this matches your Supabase settings
     },
   })
 }
