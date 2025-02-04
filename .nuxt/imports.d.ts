@@ -32,4 +32,5 @@ export { useSupabaseClient } from '../node_modules/@nuxtjs/supabase/dist/runtime
 export { useSupabaseSession } from '../node_modules/@nuxtjs/supabase/dist/runtime/composables/useSupabaseSession';
 export { useSupabaseUser } from '../node_modules/@nuxtjs/supabase/dist/runtime/composables/useSupabaseUser';
 export { useColorMode } from '../node_modules/@nuxtjs/color-mode/dist/runtime/composables';
+export { useNuxtDevTools } from '../node_modules/nuxt/node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';
