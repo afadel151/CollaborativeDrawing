@@ -22,7 +22,7 @@ const createNewDrawing = async () => {
       .from('drawings')
       .insert({
         code: drawingCode,
-        user_id: user.id,
+        user_id: user.value.id,
       });
     if (error) {
       console.error('Insert error:', error.message);
