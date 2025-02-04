@@ -338,6 +338,8 @@ onMounted(() => {
 
             // Check if object already exists
             const existingObject = canvas.getObjects().find(o => o.id === data.object.id);
+            console.log('existing object : ',existingObject);
+            
             if (!existingObject) {
                 if (data.object.type === 'line') {
                     // Handle lines separately
@@ -353,13 +355,15 @@ onMounted(() => {
                     canvas.requestRenderAll();
                 } else {
                     // Handle other objects
-                    fabric.util.enlivenObjects([data.object], function (objects) {
-                        objects.forEach(obj => {
-                            obj.set({ id: data.object.id });
-                            canvas.add(obj);
-                        });
-                        canvas.requestRenderAll();
-                    });
+                    canvas.add(data.object);
+                    canvas.requestRenderAll();
+                    // fabric.util.enlivenObjects([data.object], function (objects) {
+                    //     objects.forEach(obj => {
+                    //         obj.set({ id: data.object.id });
+                    //         canvas.add(obj);
+                    //     });
+                    //     canvas.requestRenderAll();
+                    // });
                 }
             }
         }
