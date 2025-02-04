@@ -8,7 +8,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { Slider } from '@/components/ui/slider'
 import { io } from 'socket.io-client'
 import * as fabric from 'fabric';
 const socket = io('https://collaborativedrawing.onrender.com');
