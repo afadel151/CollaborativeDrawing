@@ -3,13 +3,13 @@ import { PenLine, Users } from "lucide-vue-next";
 const supabase = useSupabaseClient();
 const router = useRouter()
 const user = useSupabaseUser();
-onMounted(() => {
-  if (user) {
-    console.log('User is logged');
+// onMounted(() => {
+//   if (user) {
+//     console.log('User is logged');
     
-    // navigateTo("/login");
-  }
-});
+//     // navigateTo("/login");
+//   }
+// });
 import { nanoid } from 'nanoid'
 const joinCode = ref("");
 const isJoinDialogOpen = ref(false);
