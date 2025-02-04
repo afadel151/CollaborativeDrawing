@@ -1,5 +1,5 @@
     <script setup>
-
+    import { useSupabaseClient, useSupabaseUser } from '#imports';
     import {
         Select,
         SelectContent,
@@ -9,6 +9,7 @@
         SelectValue,
     } from '@/components/ui/select'
     import { io } from 'socket.io-client'
+
     import * as fabric from 'fabric';
     const socket = io('https://collaborativedrawing.onrender.com');
     const lineWidth = ref(5)
@@ -18,8 +19,35 @@
     const route = useRoute()
     const roomCode = route.params.code
     const selectedMode = ref('Pencil')
+    const supabase = useSupabaseClient();
+    const user = useSupabaseUser();
+
     let canvas;
     onMounted(() => {
+        const onlineUsers = supabase.channel('users_online', {
+            config: {
+                presence: {
+                    key: user.id,
+                },
+            },
+        })
+        const userStatus = {
+            user_id: user.id,
+            online_at: new Date().toISOString(),
+        }
+        onlineUsers.subscribe(async (status) => {
+            if (status !== 'SUBSCRIBED') { return }
+
+            const presenceTrackStatus = await onlineUsers.track(userStatus)
+            console.log(presenceTrackStatus)
+        })
+        onlineUsers.on('presence', { event: 'sync' }, () => {
+            const newState = onlineUsers.presenceState()
+            console.log('enter', newState)
+        })
+        onlineUsers.on('broadcast',{event: 'enter'},(payload)=> console.log(payload))
+        
+
 
         const $ = (id) => document.getElementById(id);
         socket.emit('join-room', roomCode);
@@ -228,51 +256,51 @@
             });
         }
         socket.on('draw', (data) => {
-            console.log('draw',data);
+            console.log('draw', data);
             console.log(data.roomCode);
-            
-            
-            
-                console.log(data.type);
-                if (data.type === 'path') {
-                    console.log('draw3');
-                    canvas.add(new fabric.Path(data.path, data.options));
-                } else if (data.type === 'clear') {
-                    console.log('draw4');
-                    canvas.clear();
-                }
-                if (data.type === 'add') {
-                    const existingObject = canvas.getObjects().find(o => o.id === data.object.id);
-                    console.log('draw1');
-                    if (!existingObject) {
-                        console.log('draw2');
-                        fabric.util.enlivenObjects([data.object], function (objects) {
-                            objects.forEach(obj => {
-                                obj.set({ id: data.object.id });
-                                canvas.add(obj);
-                            });
-                            canvas.renderAll();
+
+
+
+            console.log(data.type);
+            if (data.type === 'path') {
+                console.log('draw3');
+                canvas.add(new fabric.Path(data.path, data.options));
+            } else if (data.type === 'clear') {
+                console.log('draw4');
+                canvas.clear();
+            }
+            if (data.type === 'add') {
+                const existingObject = canvas.getObjects().find(o => o.id === data.object.id);
+                console.log('draw1');
+                if (!existingObject) {
+                    console.log('draw2');
+                    fabric.util.enlivenObjects([data.object], function (objects) {
+                        objects.forEach(obj => {
+                            obj.set({ id: data.object.id });
+                            canvas.add(obj);
                         });
-                    }
-                }
-                
-                if (data.type === 'move' || data.type === 'rotate' || data.type === 'scale') {
-                    console.log('draw5');
-                    const { object } = data;
-                    const fabricObject = canvas.getObjects().find(o => o.id === object.id); // Find object by ID
-                    if (fabricObject) {
-                        fabricObject.set(object); // Update the object with the new properties
                         canvas.renderAll();
-                    }
+                    });
+                }
+            }
 
+            if (data.type === 'move' || data.type === 'rotate' || data.type === 'scale') {
+                console.log('draw5');
+                const { object } = data;
+                const fabricObject = canvas.getObjects().find(o => o.id === object.id); // Find object by ID
+                if (fabricObject) {
+                    fabricObject.set(object); // Update the object with the new properties
+                    canvas.renderAll();
                 }
 
-            
+            }
+
+
         });
         canvas.on('path:created', (event) => {
             const path = event.path;
             console.log('path created');
-            
+
             socket.emit('draw', {
                 roomCode,
                 type: 'path',
@@ -298,7 +326,7 @@
                     left: 100,
                     top: 100,
                     radius: 50,
-                    fill: 'blue',
+                    fill: LineColor.value,
                     id: `circle-${Date.now()}`, // Ensure ID is set
                 });
                 break;
@@ -307,8 +335,8 @@
                     left: 150,
                     top: 150,
                     width: 100,
-                    height: 60,
-                    fill: 'red',
+                    height: 100,
+                    fill: LineColor.value,
                     id: `rectangle-${Date.now()}`, // Ensure ID is set
                 });
                 break;
@@ -318,7 +346,7 @@
                     top: 200,
                     width: 80,
                     height: 80,
-                    fill: 'green',
+                    fill: LineColor.value,
                     id: `triangle-${Date.now()}`, // Ensure ID is set
                 });
                 break;
@@ -329,6 +357,26 @@
                     id: `line-${Date.now()}`, // Ensure ID is set
                 });
                 break;
+            case 'polygone':
+                const sides = 6; // Hexagon
+                const radius = 50; // Adjust size
+                const centerX = 200;
+                const centerY = 200;
+                const points = Array.from({ length: sides }, (_, i) => {
+                    const angle = (Math.PI / 3) * i; // 360° / 6 = 60° per step
+                    return {
+                        x: centerX + radius * Math.cos(angle),
+                        y: centerY + radius * Math.sin(angle),
+                    };
+                });
+
+                shape = new fabric.Polygon(points, {
+                    stroke: LineColor.value,
+                    fill: 'transparent',
+                    left: centerX,
+                    top: centerY,
+                    id: `hexagon-${Date.now()}`,
+                });
         }
 
         if (shape) {
@@ -340,7 +388,7 @@
             });
         }
     };
-    </script>
+</script>
 
     <template>
         <div class="flex md:p-0 p-10 flex-col-reverse md:flex-row min-h-screen">
@@ -355,7 +403,7 @@
             </div>
             <!-- Main Content -->
             <div class="flex-grow flex items-center justify-center  h-screen">
-                <canvas id="c"   class="border " ></canvas>
+                <canvas id="c" class="border "></canvas>
             </div>
             <!-- Right Sidebar -->
             <div class="md:w-1/5 bg-white pt-10 p-4 shadow-md">
@@ -370,7 +418,7 @@
                                 <SelectValue class="text-lg" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectGroup> 
+                                <SelectGroup>
                                     <SelectLabel>Mode</SelectLabel>
                                     <SelectItem value="Pencil">Pencil</SelectItem>
                                     <SelectItem value="Circle">Circle</SelectItem>
@@ -380,7 +428,6 @@
                                     <SelectItem value="vline">Vertical Line</SelectItem>
                                     <SelectItem value="square">Square</SelectItem>
                                     <SelectItem value="diamond">Diamond</SelectItem>
-                                    <SelectItem value="texture">Texture</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -418,26 +465,50 @@
                             </div>
                         </Button>
                         <!-- this adds a triangle in the canvas -->
-                        <Button class="h-20 w-20" variant="outline">
+                        <Button class="h-20 w-20" variant="outline" @click="addShape('triangle')">
                             <div
                                 className="w-0 scale-50 h-0 border-b-[86.6px] border-l-[50px] border-l-transparent border-r-[50px] border-r-transparent">
                             </div>
                         </Button>
                         <!-- this adds a line in the canvas -->
-                        <Button class="h-20 flex justify-center items-center w-20" variant="outline">
+                        <Button class="h-20 flex justify-center items-center w-20" variant="outline"
+                            @click="addShape('line')">
                             <div class="w-full h-1 bg-gray-400 -rotate-45">
 
                             </div>
                         </Button>
                         <!-- this adds a polygone in the canvas -->
 
-                        <Button class="h-20 w-20" variant="outline"></Button>
+                        <Button class="h-20 w-20" variant="outline" @click="addShape('polygone')">
+                            <div className="flex scale-50">
+                                <div>
+                                    <div className="w-[100px] h-[50px] relative">
+                                        <div
+                                            className="absolute top-[25px] border-l-[50px] border-r-[50px] border-b-[25px]">
+                                        </div>
+                                        <div
+                                            className="bottom-[25px] border-l-[50px] border-r-[50px] border-b-[25px] border-l-transparent border-r-transparent">
+                                        </div>
+                                    </div>
+                                    <div className="w-[100px] rotate-180 h-[50px] relative">
+                                        <div
+                                            className="absolute top-[25px] border-l-[50px] border-r-[50px] border-b-[25px]">
+                                        </div>
+                                        <div
+                                            className="bottom-[25px] border-l-[50px] border-r-[50px] border-b-[25px] border-l-transparent border-r-transparent">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Button>
                         <!-- this adds a polyline in the canvas -->
 
                         <Button class="h-20 w-20" variant="outline"></Button>
                         <!-- this adds a rectangle in the canvas -->
 
-                        <Button class="h-20 w-20" variant="outline"></Button>
+                        <Button class="h-20 w-20" variant="outline" @click="addShape('rectangle')">
+                            <div className="h-[40px] w-[40px] bg-gray-200"></div>
+                        </Button>
                     </div>
                 </div>
             </div>
