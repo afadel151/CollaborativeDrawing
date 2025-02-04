@@ -1,12 +1,13 @@
 <script setup>
 import { PenLine, Users } from "lucide-vue-next";
-import { useSupabaseClient, useSupabaseUser } from "#imports";
 const supabase = useSupabaseClient();
 const router = useRouter()
 const user = useSupabaseUser();
 onMounted(() => {
-  if (!user) {
-    navigateTo("/login");
+  if (user) {
+    console.log('User logged');
+    
+    // navigateTo("/login");
   }
 });
 import { nanoid } from 'nanoid'
