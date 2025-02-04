@@ -4,14 +4,12 @@ import { useSupabaseClient, useSupabaseUser } from "#imports";
 const supabase = useSupabaseClient();
 const router = useRouter()
 const user = useSupabaseUser();
-watchEffect(() => {
-  if (!user.value) {
-    console.log("No session found, redirecting to /login");
+onMounted(() => {
+  if (!user) {
     navigateTo("/login");
   }
 });
 import { nanoid } from 'nanoid'
-// const router = useRouter();
 const joinCode = ref("");
 const isJoinDialogOpen = ref(false);
 
