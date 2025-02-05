@@ -323,6 +323,8 @@ onMounted(async () => {
         } else if(newMode === 'erase'){
             drawingColorEl.value = '#FFFFFF';
             drawingShadowColorEl.value = '#FFFFFF'
+
+            
         } else {
             canvas.freeDrawingBrush = new fabric[newMode + 'Brush'](canvas);
         }
