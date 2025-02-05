@@ -27,7 +27,7 @@ const signInWithOAuth = async () => {
 
 
 <template>
-  <div class="max-w-7xl mx-auto relative flex flex-col justify-between items-center h-screen  px-4 sm:px-6 lg:px-8 py-40">
+  <div class="w-full mx-auto relative flex flex-col justify-between items-center md:h-screen h-full  px-4 sm:px-6 lg:px-8 py-40">
     <FallingStarsBg
       class="bg-white absolute -z-10 dark:bg-black"
       :color="isDark ? '#FFF' : '#555'"
