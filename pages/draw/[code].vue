@@ -13,6 +13,8 @@ import { io } from 'socket.io-client'
 import * as fabric from 'fabric';
 import { Copy } from 'lucide-vue-next';
 const socket = io('https://collaborativedrawing.onrender.com');
+
+
 const lineWidth = ref(5)
 const shadowWidth = ref(5)
 const shadowOffset = ref(5)
@@ -253,6 +255,11 @@ onMounted(async () => {
 
             return patternCanvas;
         };
+        var ErasorPatternBrush = new fabric.PencilBrush(canvas);
+        ErasorPatternBrush.color = '#FFFFFF';
+        ErasorPatternBrush.width = 10;
+
+
 
         var squarePatternBrush = new fabric.PatternBrush(canvas);
         squarePatternBrush.getPatternSrc = function () {
@@ -268,7 +275,7 @@ onMounted(async () => {
 
             return patternCanvas;
         };
-
+        
         var diamondPatternBrush = new fabric.PatternBrush(canvas);
         diamondPatternBrush.getPatternSrc = function () {
             var squareWidth = 10,
@@ -313,6 +320,9 @@ onMounted(async () => {
             canvas.freeDrawingBrush = diamondPatternBrush;
         } else if (newMode === 'texture') {
             canvas.freeDrawingBrush = texturePatternBrush;
+        } else if(newMode === 'erase'){
+            drawingColorEl.value = '#FFFFFF';
+            drawingShadowColorEl.value = '#FFFFFF'
         } else {
             canvas.freeDrawingBrush = new fabric[newMode + 'Brush'](canvas);
         }
@@ -547,6 +557,7 @@ const addShape = (type) => {
                                 <SelectItem value="vline">Vertical Line</SelectItem>
                                 <SelectItem value="square">Square</SelectItem>
                                 <SelectItem value="diamond">Diamond</SelectItem>
+                                <SelectItem value="erase">Erase</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

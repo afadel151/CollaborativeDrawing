@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false
   },
+  ssr: false,
   modules: ['@nuxtjs/tailwindcss','@nuxtjs/supabase','shadcn-nuxt' , '@nuxtjs/color-mode'],
   shadcn: {
     /**
