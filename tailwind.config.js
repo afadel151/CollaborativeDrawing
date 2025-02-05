@@ -1,5 +1,5 @@
 const animate = require("tailwindcss-animate")
-
+import { setupInspiraUI } from "@inspira-ui/plugins";
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -15,6 +15,10 @@ module.exports = {
       },
     },
     extend: {
+      boxShadow: {
+        'custom-purple': '0px 0px 40px 0px rgba(136, 4, 255, 0.18)',
+        'custom-purple-s': '0px 0px 10px 0px rgba(24, 24, 27, 0.18)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -82,5 +86,5 @@ module.exports = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate,setupInspiraUI],
 }
