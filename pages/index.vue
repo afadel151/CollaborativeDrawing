@@ -9,7 +9,7 @@ onMounted(()=>{
 </script>
 <template>
   
-    <div class="max-w-7xl relative flex flex-col justify-between items-center   mx-auto md:h-screen h-full px-4 sm:px-6 lg:px-8 py-40">
+    <div class=" relative flex flex-col justify-between items-center w-full  mx-auto md:h-screen h-full px-4 sm:px-6 lg:px-8 py-40">
      
       <FallingStarsBg
       class="bg-white absolute -z-10 dark:bg-black"
