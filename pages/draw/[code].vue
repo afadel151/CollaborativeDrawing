@@ -11,6 +11,7 @@ import {
 import { io } from 'socket.io-client'
 
 import * as fabric from 'fabric';
+import { Copy } from 'lucide-vue-next';
 const socket = io('https://collaborativedrawing.onrender.com');
 const lineWidth = ref(5)
 const shadowWidth = ref(5)
@@ -25,6 +26,7 @@ let line;
 let canvas;
 let mouseDown = false;
 const LineDrawing = ref(false);
+const Users = ref([]);
 function activateAddinLine() {
     LineDrawing.value = !LineDrawing.value;
     if (LineDrawing.value == true) {
@@ -85,7 +87,7 @@ function stopDrawingLine() {
 }
 
 
-onMounted(() => {
+onMounted(async () => {
     const onlineUsers = supabase.channel('users_online', {
         config: {
             presence: {
@@ -93,6 +95,43 @@ onMounted(() => {
             },
         },
     })
+    const { data: drawing, error: drawingError } = await supabase
+        .from('drawings')
+        .select('id')
+        .eq('code', roomCode)  // Replace with your drawing code variable
+        .single();
+    if (drawingError) {
+        console.error('Error fetching drawing:', drawingError);
+    } else {
+        const { data: users, error: usersError } = await supabase
+            .from('drawings_users')
+            .select('user_id')
+            .eq('drawing_id', drawing.id);
+
+        if (usersError) {
+            console.error('Error fetching users:', usersError);
+        } else {
+            const userIds = users.map(user => user.user_id); // Extract IDs
+
+            if (userIds.length > 0) {
+                // Step 3: Get user names from users table
+                const { data: userDetails, error: userDetailsError } = await supabase
+                    .from('users')
+                    .select('id, name') // Assuming 'name' is the field storing user names
+                    .in('id', userIds);
+
+                if (userDetailsError) {
+                    console.error('Error fetching user details:', userDetailsError);
+                } else {
+                    Users.value = userDetails
+                    console.log('Fetched users', userDetails);
+                    
+                }
+            } else {
+                console.log('No users found for this drawing.');
+            }
+        }
+    }
     const userStatus = {
         user_id: user.id,
         online_at: new Date().toISOString(),
@@ -338,8 +377,8 @@ onMounted(() => {
 
             // Check if object already exists
             const existingObject = canvas.getObjects().find(o => o.id === data.object.id);
-            console.log('existing object : ',existingObject);
-            
+            console.log('existing object : ', existingObject);
+
             if (!existingObject) {
                 if (data.object.type === 'line') {
                     // Handle lines separately
@@ -454,8 +493,8 @@ const addShape = (type) => {
 
     if (shape) {
         canvas.add(shape);
-        console.log('emitting object',shape);
-        
+        console.log('emitting object', shape);
+
         socket.emit('draw', {
             roomCode,
             type: 'add',
@@ -463,15 +502,20 @@ const addShape = (type) => {
         });
     }
 };
+
 </script>
 
 <template>
     <div class="flex md:p-0 p-10 flex-col-reverse md:flex-row min-h-screen">
         <!-- Left Sidebar -->
-        <div class="w-1/6 md:block hidden bg-white p-4 shadow-md">
-            <h2 class="text-xl font-semibold mb-4">Invited Users</h2>
-            <ul>
-                <li class="mb-2">User 1</li>
+        <div class="w-1/6 md:block hidden  p-4 h-screen  shadow-md">
+            <div class=" flex justify-center space-x-4  items-center">
+                <p class="text-3xl  font-bold">Code : </p>
+                <p class="text-2xl  text-gray-700 font-semibold">{{ roomCode }}</p>
+            </div>
+            <h2 class="text-4xl font-semibold mt-10 text-center mb-4">Joined Users</h2>
+            <ul class="border p-4  rounded-lg">
+                <li class="mb-2 ">User 1</li>
                 <li class="mb-2">User 2</li>
                 <li class="mb-2">User 3</li>
             </ul>

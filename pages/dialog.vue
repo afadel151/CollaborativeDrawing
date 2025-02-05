@@ -1,37 +1,35 @@
- <script setup>
-console.log('User is logged');
+<script setup>
+console.log("User is logged");
 import { PenLine, Users } from "lucide-vue-next";
 const supabase = useSupabaseClient();
-const router = useRouter()
+const router = useRouter();
 const user = useSupabaseUser();
 onMounted(() => {
   if (user.value) {
-    console.log('User is logged', user.value);
-    
+    console.log("User is logged", user.value);
+
     // navigateTo("/login");
   }
 });
-import { nanoid } from 'nanoid'
+import { nanoid } from "nanoid";
 const joinCode = ref("");
 const isJoinDialogOpen = ref(false);
 
 const createNewDrawing = async () => {
   const drawingCode = nanoid(10);
   try {
-    const { error } = await supabase
-      .from('drawings')
-      .insert({
-        code: drawingCode,
-        user_id: user.value.id,
-      });
+    const { error } = await supabase.from("drawings").insert({
+      code: drawingCode,
+      user_id: user.value.id,
+    });
     if (error) {
-      console.error('Insert error:', error.message);
+      console.error("Insert error:", error.message);
     } else {
-      console.log('Record inserted successfully');
-        router.push(`/draw/${drawingCode}`)
+      console.log("Record inserted successfully");
+      router.push(`/draw/${drawingCode}`);
     }
   } catch (err) {
-    console.error('Unexpected error:', err);
+    console.error("Unexpected error:", err);
   }
 };
 import Button from "~/components/ui/button/Button.vue";
@@ -43,26 +41,49 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import Input from "~/components/ui/input/Input.vue";
 
 const joinDrawing = async () => {
-      if (!joinCode.value) return
-      const { data, error } = await supabase
-        .from('drawings')
-        .select('code')
-        .eq('code', joinCode.value)
-        .single()
-      if (data) {
-        router.push(`/draw/${joinCode.value}`)
-      } else {
-        console.error('Invalid drawing code')
-      }
+  if (!joinCode.value) return;
+  const { data: drawing, error: drawingError } = await supabase
+    .from("drawings")
+    .select("id")
+    .eq("code", joinCode.value)
+    .single();
+  if (drawingError || !drawing) {
+    console.error("Invalid drawing code");
+    return;
+  }
+  const drawingId = drawing.id;
+  const userId = user.value.id;
+  const { data: joinedUser, error: joinedError } = await supabase
+    .from("drawings_users")
+    .select("user_id")
+    .eq("drawing_id", drawingId)
+    .eq("user_id", userId)
+    .single();
+  if (joinedError && joinedError.code !== "PGRST116") {
+    // Ignore "no rows found" error
+    console.error("Error checking user:", joinedError);
+    return;
+  }
+  if (!joinedUser) {
+    // Step 3: Insert the user if not already joined
+    const { error: insertError } = await supabase
+      .from("drawings_users")
+      .insert([{ drawing_id: drawingId, user_id: userId }]);
+
+    if (insertError) {
+      console.error("Error joining drawing:", insertError);
+      return;
+    }
+  }
+  router.push(`/draw/${joinCode.value}`);
 };
 </script>
 
 <template>
- 
   <div
     class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4"
   >
@@ -101,12 +122,13 @@ const joinDrawing = async () => {
             </DialogHeader>
             <div class="space-y-4 pt-4">
               <Input v-model="joinCode" placeholder="Enter drawing code" />
-              <Button class="w-full" @click="joinDrawing"> Join Drawing </Button>
+              <Button class="w-full" @click="joinDrawing">
+                Join Drawing
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
     </div>
   </div>
-</template> 
-
+</template>
