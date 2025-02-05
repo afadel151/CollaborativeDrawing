@@ -56,7 +56,7 @@ const joinDrawing = async () => {
     return;
   }
   const drawingId = drawing.id;
-  const userId = user.id;
+  const userId = user.value.id;
   const { data: joinedUser, error: joinedError } = await supabase
     .from("drawings_users")
     .select("user_id")
