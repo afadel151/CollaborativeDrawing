@@ -8,7 +8,7 @@ onMounted(()=>{
 })
 </script>
 <template>
-  
+     
     <div class=" relative flex flex-col justify-between items-center w-full  mx-auto md:h-screen h-full px-4 sm:px-6 lg:px-8 py-40">
      
       <FallingStarsBg
